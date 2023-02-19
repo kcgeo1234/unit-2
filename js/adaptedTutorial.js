@@ -4,7 +4,10 @@ var map;
 //function to instantiate the Leaflet map
 function createMap(){
     //create the map
-    map = L.map('map').setView([25.05, 121.50], 12); // setView([lat, long], Zoom)
+    map = L.map('map', {
+        center: [20, 0],
+        zoom: 2
+    });
 
     //add OSM base tilelayer
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
@@ -33,7 +36,7 @@ function onEachFeature(feature, layer) {
 //function to retrieve the data and place it on the map
 function getData(){
     //load the data
-    fetch("data/tpeMRT_ridership.geojson")
+    fetch("data/MegaCities.geojson")
         .then(function(response){
             return response.json();
         })
@@ -61,3 +64,48 @@ function getData(){
 };
 
 document.addEventListener('DOMContentLoaded',createMap)
+
+
+
+
+
+
+
+
+
+// var map = L.map('map').setView([39.75621, -104.99404], 13); // setView([lat, long], Zoom)
+
+// // add tile layer to make a base map
+// L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+// 	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+// 	subdomains: 'abcd',
+// 	maxZoom: 20
+// // add the content in L.tileLayer to map
+// }).addTo(map);
+
+
+// // create GeoJSON variable (feature)
+// var geojsonFeature = {
+//     "type": "Feature",
+//     "properties": {
+//         "name": "Coors Field",
+//         "amenity": "Baseball Stadium",
+//         "popupContent": "This is where the Rockies play!"
+//     },
+//     "geometry": {
+//         "type": "Point",
+//         "coordinates": [-104.99404, 39.75621]
+//     }
+// };
+
+// L.geoJSON(geojsonFeature).addTo(map);
+
+// //load the data
+// fetch("data/MegaCities.geojson")
+//     .then(function(response){
+//         return response.json();
+//     })
+//     .then(function(json){
+//         //create a Leaflet GeoJSON layer and add it to the map
+//         L.geoJson(json).addTo(map);
+//     })
