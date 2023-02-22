@@ -30,34 +30,39 @@ function onEachFeature(feature, layer) {
     };
 };
 
-//function to retrieve the data and place it on the map
+// Add circle markers for point features to the map
+function createPropSymbols(data){
+    //create marker options
+    var geojsonMarkerOptions = {
+        radius: 8,
+        fillColor: "#ff7800",
+        color: "#000",
+        weight: 1,
+        opacity: 1,
+        fillOpacity: 0.8
+    };
+
+    //create a Leaflet GeoJSON layer and add it to the map
+    L.geoJson(data, {
+        onEachFeature: onEachFeature,
+        pointToLayer: function (feature, latlng) {
+            return L.circleMarker(latlng, geojsonMarkerOptions);
+        }
+    }).addTo(map);
+};
+
+
+// Import GeoJSON data
 function getData(){
     //load the data
     fetch("data/tpeMRT_ridership.geojson")
         .then(function(response){
             return response.json();
         })
-        .then(function(json){            
-            //create marker options
-            var geojsonMarkerOptions = {
-                radius: 8,
-                fillColor: "#ff7800",
-                color: "#000",
-                weight: 1,
-                opacity: 1,
-                fillOpacity: 0.8
-            };
-            //create a Leaflet GeoJSON layer and add it to the map
-            L.geoJson(json, {
-                // add the popup menu by calling onEachFeature function
-                onEachFeature: onEachFeature,
-                // add the prepared marker style to all location
-                pointToLayer: function (feature, latlng){
-                    return L.circleMarker(latlng, geojsonMarkerOptions);
-                }
-            }).addTo(map);
-            
-        });
+        .then(function(json){
+            //call function to create proportional symbols
+            createPropSymbols(json);
+        })
 };
 
 document.addEventListener('DOMContentLoaded',createMap)
