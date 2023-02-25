@@ -85,8 +85,12 @@ function pointToLayer(feature, latlng, attributes){
     var layer = L.circleMarker(latlng, options);
 
     //build popup content string
-    var popupContent = "<p><b>StationName:</b> " + feature.properties.stationName + "</p><p><b>Total ridership in " + attribute.slice(-4) + ":</b> " + feature.properties[attribute] + "</p>";
-
+    if (options.radius == 0){
+        popupContent = "<p><b>StationName:</b> " + feature.properties.stationName + "</p><p><b>This station has not been built:</b></p>";
+    }
+    else{
+        var popupContent = "<p><b>StationName:</b> " + feature.properties.stationName + "</p><p><b>Total ridership in " + attribute.slice(-4) + ":</b> " + feature.properties[attribute] + "</p>";
+    };
     //bind the popup to the circle marker
     layer.bindPopup(popupContent, {
         offset: new L.Point(0,-options.radius) 
@@ -213,6 +217,25 @@ function updatePropSymbols(attribute){
             //add formatted attribute to panel content string
             var year = attribute.slice(-4);
             popupContent += "<p><b>Total ridership in " + year + ":</b> " + props[attribute] + "</p>";
+
+            //update popup content            
+            popup = layer.getPopup();            
+            popup.setContent(popupContent).update();
+        }
+        else if(layer.feature && layer.feature.properties[attribute] == 0){
+            //access feature properties
+            var props = layer.feature.properties;
+
+            //update each feature's radius based on new attribute values
+            var radius = calcPropRadius(props[attribute]);
+            layer.setRadius(radius);
+
+            //add city to popup content string
+            var popupContent = "<p><b>StationName:</b> " + props.stationName + "</p>";
+
+            //add formatted attribute to panel content string
+            var year = attribute.slice(-4);
+            popupContent += "<p><b>This station has not been built</b></p>";
 
             //update popup content            
             popup = layer.getPopup();            
