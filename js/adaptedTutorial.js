@@ -33,34 +33,47 @@ function onEachFeature(feature, layer) {
     };
 };
 
-//function to retrieve the data and place it on the map
+//Step 3: Add circle markers for point features to the map
+function createPropSymbols(data){
+    var attribute = "Pop_2015";
+
+
+    //create marker options
+    var geojsonMarkerOptions = {
+        radius: 8,
+        fillColor: "#ff7800",
+        color: "#000",
+        weight: 1,
+        opacity: 1,
+        fillOpacity: 0.8
+    };
+
+    //create a Leaflet GeoJSON layer and add it to the map
+    L.geoJson(data, {
+        pointToLayer: function (feature, latlng) {
+            //Step 5: For each feature, determine its value for the selected attribute
+            var attValue = Number(feature.properties[attribute]);
+
+            //examine the attribute value to check that it is correct
+            console.log(feature.properties, attValue);
+
+            //create circle markers
+            return L.circleMarker(latlng, geojsonMarkerOptions);
+        }
+    }).addTo(map);
+};
+
+//Step 2: Import GeoJSON data
 function getData(){
     //load the data
     fetch("data/MegaCities.geojson")
         .then(function(response){
             return response.json();
         })
-        .then(function(json){            
-            //create marker options
-            var geojsonMarkerOptions = {
-                radius: 8,
-                fillColor: "#ff7800",
-                color: "#000",
-                weight: 1,
-                opacity: 1,
-                fillOpacity: 0.8
-            };
-            //create a Leaflet GeoJSON layer and add it to the map
-            L.geoJson(json, {
-                // add the popup menu by calling onEachFeature function
-                onEachFeature: onEachFeature,
-                // add the prepared marker style to all location
-                pointToLayer: function (feature, latlng){
-                    return L.circleMarker(latlng, geojsonMarkerOptions);
-                }
-            }).addTo(map);
-            
-        });
+        .then(function(json){
+            //call function to create proportional symbols
+            createPropSymbols(json);
+        })
 };
 
 document.addEventListener('DOMContentLoaded',createMap)
