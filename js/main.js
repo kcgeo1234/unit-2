@@ -1,7 +1,7 @@
 //create map
 //declare map var in global scope
 var map;
-
+var minValue;
 //function to instantiate the Leaflet map
 function createMap(){
     //create the map
@@ -29,8 +29,7 @@ function calculateMinValue(data){
               //get ridership for current year
               var value = station.properties["yr"+ String(year)];
               //add value to array
-              if (value == 0){continue}
-              else{
+              if (value != 0){
               allValues.push(value);}
         }
     }
@@ -43,7 +42,7 @@ function calculateMinValue(data){
 //calculate the radius of each proportional symbol
 function calcPropRadius(attValue) {
     //constant factor adjusts symbol sizes evenly
-    var minRadius = 5;
+    var minRadius = 2;
     //Flannery Apperance Compensation formula
     var radius = 1.0083 * Math.pow(attValue/minValue,0.5715) * minRadius
 
@@ -158,11 +157,10 @@ function createSequenceControls(attributes){
     document.querySelector(".range-slider").value = 0;
     document.querySelector(".range-slider").step = 1;
     //replace button content with images
-    // document.querySelector('#reverse').insertAdjacentHTML('beforeend',"<img src='img/reverse.png'>")
-    // document.querySelector('#forward').insertAdjacentHTML('beforeend',"<img src='img/forward.png'>")
-    document.querySelector('#panel').insertAdjacentHTML('beforeend','<button class="step" id="reverse">Reverse</button>');
-    document.querySelector('#panel').insertAdjacentHTML('beforeend','<button class="step" id="forward">Forward</button>');
-    
+    document.querySelector('#panel').insertAdjacentHTML('beforeend','<button class="step" id="reverse"></button>');
+    document.querySelector('#panel').insertAdjacentHTML('beforeend','<button class="step" id="forward"></button>');
+    document.querySelector('#reverse').insertAdjacentHTML('beforeend',"<img src='img/left.png'>")
+    document.querySelector('#forward').insertAdjacentHTML('beforeend',"<img src='img/right.png'>")
     //Step 5: click listener for buttons
     document.querySelectorAll('.step').forEach(function(step){
         step.addEventListener("click", function(){
@@ -202,7 +200,7 @@ function createSequenceControls(attributes){
 //Step 10: Resize proportional symbols according to new attribute values
 function updatePropSymbols(attribute){
     map.eachLayer(function(layer){
-        if (layer.feature && layer.feature.properties[attribute]){
+        if (layer.feature && layer.feature.geometry.type == "Point"){
             //update the layer style and popup
             //access feature properties
             var props = layer.feature.properties;
@@ -212,7 +210,9 @@ function updatePropSymbols(attribute){
             layer.setRadius(radius);
 
             //add city to popup content string
-            var popupContent = "<p><b>StationName:</b> " + props.stationName + "</p>";
+            var popupValue = props[attribute] == 0 ? "This station has not been built" : props.stationName;
+
+            var popupContent = "<p><b>StationName:</b> " + popupValue + "</p>";
 
             //add formatted attribute to panel content string
             var year = attribute.slice(-4);
@@ -222,25 +222,6 @@ function updatePropSymbols(attribute){
             popup = layer.getPopup();            
             popup.setContent(popupContent).update();
         }
-        else if(layer.feature && layer.feature.properties[attribute] == 0){
-            //access feature properties
-            var props = layer.feature.properties;
-
-            //update each feature's radius based on new attribute values
-            var radius = calcPropRadius(props[attribute]);
-            layer.setRadius(radius);
-
-            //add city to popup content string
-            var popupContent = "<p><b>StationName:</b> " + props.stationName + "</p>";
-
-            //add formatted attribute to panel content string
-            var year = attribute.slice(-4);
-            popupContent += "<p><b>This station has not been built</b></p>";
-
-            //update popup content            
-            popup = layer.getPopup();            
-            popup.setContent(popupContent).update();
-        };
     });
 };
 
