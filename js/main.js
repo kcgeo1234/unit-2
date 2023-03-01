@@ -210,12 +210,11 @@ function updatePropSymbols(attribute){
             layer.setRadius(radius);
 
             //add city to popup content string
-            var popupValue = props[attribute] == 0 ? "This station has not been built" : props.stationName;
-
-            var popupContent = "<p><b>StationName:</b> " + popupValue + "</p>";
+            var popupContent = "<p><b>StationName:</b> " + props.stationName + "</p>";
 
             //add formatted attribute to panel content string
             var year = attribute.slice(-4);
+            var popupValue = props[attribute] == 0 ? popupContent += "This station has not been built":
             popupContent += "<p><b>Total ridership in " + year + ":</b> " + props[attribute] + "</p>";
 
             //update popup content            
