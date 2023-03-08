@@ -1,10 +1,22 @@
 /*Add CSS styles here*/
-#map { height: 600px ; }
+#title {
+    font-size: 30px;
+}
+
+.name_time {
+    height: 20px;
+    font-size: 15px;
+    float: right;
+}
+
+
+#map { height: 600px;
+    width: 100%;
+    display: inline-block;}
 
 .leaflet-popup-content p {
     margin: 0.2em 0;
 }
-
 
 #panel {  
     width: 10%;  
@@ -13,6 +25,26 @@
     vertical-align: top;  
     text-align: center;  
     line-height: 42px;  
+}  
+
+.sequence-control-container {  
+    width: 350px;  
+    height: 60px;  
+    background-color: rgba(255,255,255,0.8);  
+    padding: 10px;  
+    line-height: 45px;  
+    text-align: center;  
+    border: solid gray 1px;  
+}  
+
+.legend-control-container {  
+    width: 200px;  
+    height: 150px;  
+    background-color: rgba(255,255,255,0.8);  
+    padding: 10px;  
+    line-height: 0px;  
+    text-align: center;  
+    border: solid gray 1px;  
 }  
 
 .range-slider {  
@@ -24,13 +56,25 @@
 }  
 
 .step img {  
-    width: 100%;  
+    width: 90%;  
+    height: auto;
 }  
 
 #forward {
     float: right;
+    height: 40px;
+    width: 45px;
+    background-color:white
     }
 
 #reverse {  
-    float: left;  
+    float: left;
+    height: 40px;
+    width: 45px;
+    background-color:white
+}
+.slider-label{
+    height:30px;
+    padding:0;
+    margin:0;
 }
