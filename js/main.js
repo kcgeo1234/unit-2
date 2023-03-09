@@ -17,6 +17,7 @@ function createMap(){
     
     //call getData function
     getData();
+    getRoute();
 };
 
 // Import GeoJSON data
@@ -32,6 +33,18 @@ function getData(){
             createPropSymbols(json, attributes);
             createSequenceControls(attributes);
             createLegend(attributes);
+        })
+};
+
+// Import GeoJSON data
+function getRoute(){
+    fetch("data/MRT_TPE_Routes_Modified.geojson")  //load the data
+        .then(function(response){
+            return response.json();
+        })
+        .then(function(json){
+            console.log(json)
+            L.geoJson(json).addTo(map);
         })
 };
 
